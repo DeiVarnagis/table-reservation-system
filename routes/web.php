@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::resource('restaurants',RestaurantController::class);
+Route::resource('reservations', ReservationController::class)->except(['edit', 'update', 'delete']);
+Route::get('*', function (){
+    abort('404');
 });
