@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\Reservation;
+use App\Rules\CheckRestaurantCapacity;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -36,7 +36,7 @@ class ReservationRequest extends FormRequest
             'clients.*.first_name' => 'required|string|alpha|min:3|max:125',
             'clients.*.last_name' => 'required|string||alpha|min:3|max:125',
             'restaurant_id' => ['required','exists:restaurants,id',
-                new Reservation(
+                new CheckRestaurantCapacity(
                     $this->get('restaurant_id'),
                     $this->get('start_date'),
                     $this->get('duration'),

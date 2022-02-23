@@ -45,11 +45,19 @@ class ReservationController extends Controller
      */
     public function store(ReservationRequest $request): JsonResponse
     {
+        //Creating reservation, ignoring duration and clients
         $reservation = Reservation::create(array_merge(
             $request->except(['clients','duration']),
             ['end_date' => Carbon::make($request->start_date)->addHour($request->duration)]));
 
-        $reservation->attachTables(count($request->clients));
+        //Recursively adding tables to reservation
+        $reservation->attachTables(count($request->clients) + 1);
+
+        //Creating clients for future development
+        foreach ($request->clients as $client)
+        {
+            Client::create(array_merge($client, ['reservation_id' => $reservation->id]));
+        }
 
         return response()->json(['message' => 'success']);
     }

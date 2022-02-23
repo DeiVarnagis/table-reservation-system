@@ -35,6 +35,7 @@ class Reservation extends Model
         return $this->belongsToMany(Table::class)->withTimestamps();
     }
 
+    //Get a list of taken tables ids
     private function getTakenTables(): array
     {
         $takenTables = [];
@@ -44,6 +45,7 @@ class Reservation extends Model
         return $takenTables;
     }
 
+    //Recursive method to add tables for reservation
     public function attachTables(int $clients, array $takenTables = []): int
     {
         if (count($takenTables) == 0) {
@@ -56,8 +58,17 @@ class Reservation extends Model
 
         $table = Table::where('restaurant_id', $this->restaurant->id)
             ->whereNotIn('id', $takenTables)
-            ->orderBy('places', 'asc')
+            ->where('places', '<=', $clients)
+            ->orderBy('places', 'desc')
             ->first();
+
+        if (!$table) {
+            $table = Table::where('restaurant_id', $this->restaurant->id)
+                ->whereNotIn('id', $takenTables)
+                ->where('places', '>=', $clients)
+                ->orderBy('places', 'asc')
+                ->first();
+        }
 
         $takenTables[] = $table->id;
         $this->tables()->attach($table);

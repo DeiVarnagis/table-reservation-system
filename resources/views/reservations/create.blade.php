@@ -10,7 +10,7 @@
             <div class="form-row d-flex justify-content-center">
                 <div class="form-group col-md-3 m-1">
                     <label for="first_name">First Name</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
+                    <input required type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name">
                 </div>
                 <div class="form-group col-md-3 m-1">
                     <label for="last_name">Last Name</label>
@@ -33,8 +33,7 @@
             <div class="form-row d-flex justify-content-center pb-3">
                 <div class="form-group col-md-6 pb-3">
                     <label for="restaurant">Restaurants</label>
-                    <select id="restaurant" name="restaurant" class="form-select" aria-label="Default select example">
-                        <option value="0" selected>Select restaurant</option>
+                    <select required id="restaurant" name="restaurant" class="form-select" aria-label="Default select example">
                         @foreach($restaurants as $restaurant)
                             <option value="{{$restaurant->id}}">{{$restaurant->name}}</option>
                         @endforeach
@@ -47,7 +46,7 @@
             <div class="form-row d-flex justify-content-center pb-3 align-items-center">
                 <div class="form-group col-md-3 m-1">
                     <label for="start_date">Datetime</label>
-                    <input class="form-control" type="datetime-local" name="start_date"
+                    <input required class="form-control" type="datetime-local" name="start_date"
                            id="start_date" value="2022-02-22T19:30"
                            min="2022-02-22T19:30" max="2030-02-22T19:30">
                 </div>
@@ -100,10 +99,10 @@
         $("#dynamic-ar").click(function () {
             ++i;
             $("#dynamicAddRemove").append('<tr>' +
-                '<td><input type="text" id="first_name' + i +' "  name="first_name" placeholder="Enter first name" class="form-control" /></td>' +
-                '<td><input type="text" id="last_name_' + i +' " name="last_name" placeholder="Enter last name" class="form-control" /></td>' +
-                '<td><input type="email" id="email_' + i +' " name="email" placeholder="Enter email" class="form-control" /></td>' +
-                '<td><button type="button" class="btn btn-outline-danger remove-input-field">Delete</button></td></tr>'
+                '<td><input required type="text" id="first_name' + i +' "  name="first_name" placeholder="Enter first name" class="form-control" /></td>' +
+                '<td><input required type="text" id="last_name_' + i +' " name="last_name" placeholder="Enter last name" class="form-control" /></td>' +
+                '<td><input required type="email" id="email_' + i +' " name="email" placeholder="Enter email" class="form-control" /></td>' +
+                '<td><button required type="button" class="btn btn-outline-danger remove-input-field">Delete</button></td></tr>'
             );
         });
 
@@ -139,6 +138,7 @@
                     'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             e.preventDefault();
             let formData = {
                 clients: formClients(),
@@ -158,11 +158,10 @@
                 data: formData,
                 dataType: 'json',
                 success: function (response) {
-                   // window.location="{{ route('reservations.index') }}"
+                    alert(response.message);
                 },
                 error: function (request, status, error) {
-                    //alert(request.responseText);
-                    console.log(request.responseText)
+                    alert(request.responseText);
                 }
             });
         });

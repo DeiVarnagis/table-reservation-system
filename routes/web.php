@@ -17,6 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('restaurants',RestaurantController::class)->except(['edit', 'update']);
 Route::resource('reservations', ReservationController::class)->except(['edit', 'update']);
-Route::get('*', function (){
-    abort('404');
+Route::fallback(function () {
+    return redirect('/restaurants');
 });

@@ -6,7 +6,7 @@ use App\Models\Restaurant;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 
-class Reservation implements Rule
+class CheckRestaurantCapacity implements Rule
 {
 
     private Restaurant $restaurant;
@@ -36,7 +36,7 @@ class Reservation implements Rule
      */
     public function passes($attribute, $value)
     {
-        if ($this->restaurant->getFreePlaces(Carbon::make($this->startDate), Carbon::make($this->startDate)->addHour($this->duration)) < $this->clientsCount) {
+        if ($this->restaurant->getFreePlaces(Carbon::make($this->startDate), Carbon::make($this->startDate)->addHour($this->duration)) < $this->clientsCount + 1) {
             return false;
         }
         return true;

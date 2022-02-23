@@ -24,6 +24,7 @@ class Restaurant extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    //Generate tables for restaurant(for testing purposes)
     public function generateTables()
     {
         $averagePlaces = floor($this->number_of_clients / $this->number_of_tables);
@@ -40,6 +41,7 @@ class Restaurant extends Model
         }
     }
 
+    //Get colliding reservation list
     public function getCollidingReservations(Carbon $startDate, Carbon $endDate): Collection
     {
         return $this->reservations()
@@ -48,6 +50,7 @@ class Restaurant extends Model
             ->get();
     }
 
+    //Get amount of free spaces in restaurant
     public function getFreePlaces(Carbon $startDate, Carbon $endDate)
     {
         $takenPlaces = 0;
