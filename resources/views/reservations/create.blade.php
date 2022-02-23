@@ -158,10 +158,11 @@
                 data: formData,
                 dataType: 'json',
                 success: function (response) {
-                    window.location="{{ route('reservations.index') }}"
+                   // window.location="{{ route('reservations.index') }}"
                 },
                 error: function (request, status, error) {
-                    alert(request.responseText);
+                    //alert(request.responseText);
+                    console.log(request.responseText)
                 }
             });
         });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RestaurantRequestStore;
 use App\Http\Requests\RestaurantRequestUpdate;
+use App\Models\Reservation;
 use App\Models\Restaurant;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -39,7 +40,8 @@ class RestaurantController extends Controller
      */
     public function store(RestaurantRequestStore $request): RedirectResponse
     {
-        Restaurant::create($request->validated());
+        $restaurant = Restaurant::create($request->validated());
+        $restaurant->generateTables();
         return redirect()->route('restaurants.index')->with(['success' => 'Restaurant successfully created']);
     }
 
@@ -54,29 +56,6 @@ class RestaurantController extends Controller
         return view('restaurants.show', compact('restaurant'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Restaurant $restaurant
-     * @return View
-     */
-    public function edit(Restaurant $restaurant): View
-    {
-        return view('restaurants.edit', compact('restaurant'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param RestaurantRequestUpdate $request
-     * @param Restaurant $restaurant
-     * @return RedirectResponse
-     */
-    public function update(RestaurantRequestUpdate $request, Restaurant $restaurant): RedirectResponse
-    {
-        $restaurant->update($request->validated());
-        return redirect()->route('restaurants.index')->with(['success' => 'Restaurant successfully updated']);
-    }
 
     /**
      * Remove the specified resource from storage.

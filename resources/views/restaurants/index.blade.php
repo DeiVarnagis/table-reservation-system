@@ -6,8 +6,8 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            <th scope="col">Maximum table amount</th>
-            <th scope="col">Maximum client amount</th>
+            <th scope="col">Table amount</th>
+            <th scope="col">Client amount</th>
             <th scope="col"><a class="btn btn-outline-primary" href="{{ route('restaurants.create') }}" role="button">Create</a></th>
         </tr>
         </thead>
@@ -18,13 +18,12 @@
                 <td>{{$restaurant->name}}</td>
                 <td>{{$restaurant->number_of_tables}}</td>
                 <td>{{$restaurant->number_of_clients}}</td>
-                <td><a class="btn btn-outline-primary" href="{{ route('restaurants.edit', $restaurant) }}" role="button">Edit</a></td>
                 <td>
                     <form method="POST" action="{{ route('restaurants.destroy', $restaurant) }}">
                         @csrf
                         @method('delete')
                         <div class="form-group">
-                            <input type="submit" class="btn btn-outline-danger" value="Delete user">
+                            <input type="submit" class="btn btn-outline-danger" value="Delete">
                         </div>
                     </form>
                 </td>

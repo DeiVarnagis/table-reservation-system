@@ -22,6 +22,15 @@
                 <td>{{$reservation->end_date}}</td>
                 <td>{{$reservation->clients->count()}}</td>
                 <td>{{$reservation->created_at}}</td>
+                <td>
+                    <form method="POST" action="{{ route('reservations.destroy', $reservation) }}">
+                        @csrf
+                        @method('delete')
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-outline-danger" value="Delete">
+                        </div>
+                    </form>
+                </td>
             </tr>
             <tr>
         @endforeach

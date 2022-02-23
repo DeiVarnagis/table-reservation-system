@@ -8,6 +8,7 @@ use App\Http\Requests\RestaurantRequestUpdate;
 use App\Models\Client;
 use App\Models\Reservation;
 use App\Models\Restaurant;
+use App\Models\Table;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -48,10 +49,7 @@ class ReservationController extends Controller
             $request->except(['clients','duration']),
             ['end_date' => Carbon::make($request->start_date)->addHour($request->duration)]));
 
-        foreach ($request->clients as $client)
-        {
-            Client::create(array_merge($client, ['reservation_id' => $reservation->id]));
-        }
+        $reservation->attachTables(count($request->clients));
 
         return response()->json(['message' => 'success']);
     }
@@ -65,6 +63,18 @@ class ReservationController extends Controller
     public function show(Restaurant $restaurant): View
     {
         return view('reservations.show', compact('restaurant'));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Reservation $reservation
+     * @return RedirectResponse
+     */
+    public function destroy(Reservation $reservation) : RedirectResponse
+    {
+        $reservation->delete();
+        return redirect()->route('reservations.index')->with(['success' => 'Reservation successfully deleted']);
     }
 
 }
