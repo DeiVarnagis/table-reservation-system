@@ -6,10 +6,8 @@ use App\Models\Restaurant;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 
-class CheckRestaurantCapacity implements Rule
+class CheckRestaurantCapacityRule implements Rule
 {
-
-    private Restaurant $restaurant;
     private string $startDate;
     private int $duration;
     private int $clientsCount;
@@ -19,9 +17,8 @@ class CheckRestaurantCapacity implements Rule
      *
      * @return void
      */
-    public function __construct(int $restaurantId, string $startDate, int $duration, int $clientsCount)
+    public function __construct(string $startDate, int $duration, int $clientsCount)
     {
-        $this->restaurant = Restaurant::find($restaurantId);
         $this->startDate = $startDate;
         $this->duration = $duration;
         $this->clientsCount = $clientsCount;
@@ -34,9 +31,15 @@ class CheckRestaurantCapacity implements Rule
      * @param mixed $value
      * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
-        if ($this->restaurant->getFreePlaces(Carbon::make($this->startDate), Carbon::make($this->startDate)->addHour($this->duration)) < $this->clientsCount + 1) {
+        $restaurant = Restaurant::find($value);
+        if ($restaurant->getFreePlaces(
+                Carbon::make($this->startDate),
+                Carbon::make($this->startDate)
+                    ->addHour($this->duration)
+            ) < $this->clientsCount + 1) {
+
             return false;
         }
         return true;
@@ -47,8 +50,8 @@ class CheckRestaurantCapacity implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
-        return $this->restaurant->name . ' is full at that moment';
+        return 'Restaurant is full at that moment';
     }
 }

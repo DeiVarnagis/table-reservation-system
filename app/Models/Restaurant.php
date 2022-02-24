@@ -24,29 +24,26 @@ class Restaurant extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    //Generate tables for restaurant(for testing purposes)
-    public function generateTables()
-    {
-        $averagePlaces = floor($this->number_of_clients / $this->number_of_tables);
-        $leftOvers = $this->number_of_clients - ($averagePlaces * $this->number_of_tables);
-        for ($i = 0; $i < $this->number_of_tables; $i++) {
-
-            $leftOvers > 0 ? $extra = 1 : $extra = 0;
-
-            Table::create([
-                'restaurant_id' => $this->id,
-                'places' => $averagePlaces + $extra
-            ]);
-            $leftOvers--;
-        }
-    }
-
     //Get colliding reservation list
     public function getCollidingReservations(Carbon $startDate, Carbon $endDate): Collection
     {
         return $this->reservations()
-            ->whereBetween('start_date', [$startDate, $endDate])
-            ->orWhereBetween('end_date', [$startDate, $endDate])
+            ->where(function($query) use ($startDate, $endDate){
+                $query->where('start_date', '>', $startDate)
+                    ->where('start_date', '<', $endDate);
+            })
+            ->orWhere(function($query) use ($startDate, $endDate){
+                $query->where('end_date', '>', $startDate)
+                    ->where('start_date', '<', $endDate);
+            })
+            ->orWhere(function($query) use ($startDate, $endDate){
+                $query->where('start_date', '<', $startDate)
+                    ->where('end_date', '>', $endDate);
+            })
+            ->orWhere(function($query) use ($startDate, $endDate){
+                $query->where('start_date', '>', $startDate)
+                    ->where('end_date', '<', $endDate);
+            })
             ->get();
     }
 

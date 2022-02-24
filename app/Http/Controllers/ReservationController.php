@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReservationRequest;
-use App\Http\Requests\RestaurantRequestStore;
-use App\Http\Requests\RestaurantRequestUpdate;
+use App\Http\Requests\RestaurantStoreRequest;
+use App\Http\Requests\RestaurantUpdateRequest;
 use App\Models\Client;
 use App\Models\Reservation;
 use App\Models\Restaurant;
@@ -24,7 +24,7 @@ class ReservationController extends Controller
      */
     public function index(): View
     {
-        return view('reservations.index',['reservations' => Reservation::all()] );
+        return view('reservations.index', ['reservations' => Reservation::all()]);
     }
 
     /**
@@ -34,7 +34,7 @@ class ReservationController extends Controller
      */
     public function create(): View
     {
-        return view('reservations.create',['restaurants' => Restaurant::select(['id', 'name'])->get()]);
+        return view('reservations.create', ['restaurants' => Restaurant::select(['id', 'name'])->get()]);
     }
 
     /**
@@ -47,15 +47,14 @@ class ReservationController extends Controller
     {
         //Creating reservation, ignoring duration and clients
         $reservation = Reservation::create(array_merge(
-            $request->except(['clients','duration']),
+            $request->except(['clients', 'duration']),
             ['end_date' => Carbon::make($request->start_date)->addHour($request->duration)]));
 
         //Recursively adding tables to reservation
         $reservation->attachTables(count($request->clients) + 1);
 
         //Creating clients for future development
-        foreach ($request->clients as $client)
-        {
+        foreach ($request->clients as $client) {
             Client::create(array_merge($client, ['reservation_id' => $reservation->id]));
         }
 
@@ -79,7 +78,7 @@ class ReservationController extends Controller
      * @param Reservation $reservation
      * @return RedirectResponse
      */
-    public function destroy(Reservation $reservation) : RedirectResponse
+    public function destroy(Reservation $reservation): RedirectResponse
     {
         $reservation->delete();
         return redirect()->route('reservations.index')->with(['success' => 'Reservation successfully deleted']);

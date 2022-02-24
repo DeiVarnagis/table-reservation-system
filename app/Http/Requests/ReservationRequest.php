@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CheckRestaurantCapacity;
+use App\Rules\CheckRestaurantCapacityRule;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -23,7 +23,7 @@ class ReservationRequest extends FormRequest
      *
      * @return array
      */
-    public function rules():array
+    public function rules(): array
     {
         return [
             'first_name' => 'required|string|alpha|min:3|max:125',
@@ -32,12 +32,12 @@ class ReservationRequest extends FormRequest
             'phone' => 'required|string|min:3|max:125',
             'start_date' => 'required|date|after:' . Carbon::now(),
             'duration' => 'required|integer|min:1|max:5',
+            'clients' => 'required|array',
             'clients.*.email' => 'required|email|min:3|max:125',
             'clients.*.first_name' => 'required|string|alpha|min:3|max:125',
             'clients.*.last_name' => 'required|string||alpha|min:3|max:125',
-            'restaurant_id' => ['required','exists:restaurants,id',
-                new CheckRestaurantCapacity(
-                    $this->get('restaurant_id'),
+            'restaurant_id' => ['bail', 'required', 'exists:restaurants,id',
+                new CheckRestaurantCapacityRule(
                     $this->get('start_date'),
                     $this->get('duration'),
                     count($this->get('clients'))

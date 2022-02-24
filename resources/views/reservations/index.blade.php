@@ -6,6 +6,7 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Reservation client</th>
+            <th scope="col">Restaurant</th>
             <th scope="col">Reservation start date</th>
             <th scope="col">Reservation end date</th>
             <th scope="col">Clients amount</th>
@@ -18,6 +19,7 @@
             <tr style="cursor: pointer;">
                 <th scope="row">{{$reservation->id}}</th>
                 <td>{{$reservation->client_full_name()}}</td>
+                <td>{{$reservation->restaurant->name}}</td>
                 <td>{{$reservation->start_date}}</td>
                 <td>{{$reservation->end_date}}</td>
                 <td>{{$reservation->clients->count()}}</td>
