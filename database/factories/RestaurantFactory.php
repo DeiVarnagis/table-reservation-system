@@ -17,7 +17,7 @@ class RestaurantFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->colorName,
+            'name' => $this->faker->unique()->colorName,
             'number_of_tables' => $this->faker->numberBetween(5,10),
             'number_of_clients' => $this->faker->numberBetween(30,55)
         ];
